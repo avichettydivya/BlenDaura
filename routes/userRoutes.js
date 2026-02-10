@@ -2,7 +2,6 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 
-
 const router = express.Router();
 
 /* ================= SIGNUP ================= */
@@ -10,16 +9,19 @@ router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // IMPORTANT: DO NOT hash here
     const user = await User.create({
       name,
       email,
-      password, // plain password
+      password,
     });
 
     res.status(201).json({ message: "User registered successfully" });
@@ -50,18 +52,18 @@ router.post("/login", async (req, res) => {
     );
 
     res.json({
-  token,
-  user: {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role, // ✅ THIS LINE FIXES ADMIN
-  },
-});
-
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
 export default router;
+
