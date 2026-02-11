@@ -47,11 +47,16 @@ router.post("/", protect, async (req, res) => {
 
     // 🔒 VERIFY PRODUCTS
     for (let item of items) {
-      const productExists = await Product.findById(item.product);
-      if (!productExists) {
-        return res.status(400).json({ message: "Invalid product in cart" });
-      }
-    }
+  if (!mongoose.Types.ObjectId.isValid(item.product)) {
+    return res.status(400).json({ message: "Invalid product ID in cart" });
+  }
+
+  const productExists = await Product.findById(item.product).lean();
+  if (!productExists) {
+    return res.status(400).json({ message: "Product not found" });
+  }
+}
+
 
     const order = await Order.create({
       user: req.user.id,
