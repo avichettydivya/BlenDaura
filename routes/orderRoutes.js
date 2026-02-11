@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import Order from "../models/order.js";
 import Product from "../models/Product.js";
 import { protect, adminOnly } from "../middleware/auth.js";
