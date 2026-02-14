@@ -90,11 +90,12 @@ if (!emailRegex.test(email)) {
       total: calculatedTotal,
       paymentMethod: paymentMode || "UPI",
       shippingDetails: {
-  name: shippingDetails.name.trim(),
-  email: email, // 👈 use validated + trimmed email
+  name: shippingDetails.name,
+  email: email,
   phone: shippingDetails.phone,
-  address: shippingDetails.address.trim(),
+  address: shippingDetails.address,
 },
+
 
       paymentStatus: "pending",
       status: "pending",
