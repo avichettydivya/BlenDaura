@@ -89,7 +89,13 @@ if (!emailRegex.test(email)) {
       items: verifiedItems,
       total: calculatedTotal,
       paymentMethod: paymentMode || "UPI",
-      shippingDetails,
+      shippingDetails: {
+  name: shippingDetails.name.trim(),
+  email: email, // 👈 use validated + trimmed email
+  phone: shippingDetails.phone,
+  address: shippingDetails.address.trim(),
+},
+
       paymentStatus: "pending",
       status: "pending",
     });
