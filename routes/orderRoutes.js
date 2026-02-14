@@ -80,7 +80,7 @@ router.post("/", protect, async (req, res) => {
 /* =========================
    USER — SUBMIT UTR
 ========================= */
-router.put("/:id/utr", async (req, res) => {
+router.put("/:id/utr", protect, async (req, res) => {
   try {
     const { utr } = req.body;
 
@@ -91,6 +91,10 @@ router.put("/:id/utr", async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
+    }
+     // 🔒 Make sure order belongs to logged in user
+    if (order.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
     }
 
     order.utr = utr;
